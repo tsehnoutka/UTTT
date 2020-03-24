@@ -43,10 +43,12 @@ function clicked(strId) {  //  get game ( remove first two charageters)
     else
         player = 1; // player 2
 
-    console.log("BEGINNING - Player: " + player + " id: " + strId + " game: " + game + " box: " + box + " currentGameNumber: " + currentGameNumber);
+    //console.log("BEGINNING - Player: " + player + " id: " + strId + " game: " + game + " box: " + box + " currentGameNumber: " + currentGameNumber);
 
-    if (playerScore[0][game].indexOf(box) < 0 && playerScore[1][game].indexOf(box) < 0 && clickCount <= 81) {
-        //  the square is open
+    if (playerScore[0][game].indexOf(box) >= 0 || playerScore[1][game].indexOf(box) >= 0 || clickCount > 81)
+      return;
+
+             //  the square is open
         var color = (player == 0) ? "red" : "green";
         var availableColor = (player == 0) ? "lightgreen" : "lightpink";
         document.getElementById(strId).style.backgroundColor = color;  // paint it red for player one
@@ -72,10 +74,10 @@ function clicked(strId) {  //  get game ( remove first two charageters)
         else
             currentGameNumber = gameLocation.indexOf(box);
 
-    }
+      
     color = (player != 0) ? "red" : "green";
     document.getElementById("turnbox").style.backgroundColor = color;
-    console.log("END - Player: " + player + " id: " + strId + " game: " + game + " box: " + box + " currentGameNumber: " + currentGameNumber);
+  //  console.log("END - Player: " + player + " id: " + strId + " game: " + game + " box: " + box + " currentGameNumber: " + currentGameNumber);
 
     if (!Won) {
         //  clear available moves
@@ -83,7 +85,7 @@ function clicked(strId) {  //  get game ( remove first two charageters)
             for (x = 1; x <= 3; x++)
                 for (y = 1; y <= 3; y++) {
                     myIndex = g + "." + x + "." + y;
-                    console.log(myIndex + " : " + document.getElementById(myIndex).style.backgroundColor);
+                  //  console.log(myIndex + " : " + document.getElementById(myIndex).style.backgroundColor);
                     if ((document.getElementById(myIndex).style.backgroundColor == "lightgreen") ||
                         (document.getElementById(myIndex).style.backgroundColor == "lightpink"))
                         document.getElementById(myIndex).style.backgroundColor = ""
@@ -96,7 +98,7 @@ function clicked(strId) {  //  get game ( remove first two charageters)
                 for (x = 1; x <= 3; x++)
                     for (y = 1; y <= 3; y++) {
                         myIndex = g + "." + x + "." + y;
-                        console.log(myIndex + " background color : " + document.getElementById(myIndex).style.backgroundColor);
+                        //console.log(myIndex + " background color : " + document.getElementById(myIndex).style.backgroundColor);
                         if (document.getElementById(myIndex).style.backgroundColor == "")
                             document.getElementById(myIndex).style.backgroundColor = availableColor;
                         //document.getElementById(myIndex).style.backgroundColor = "lightgray" ;
