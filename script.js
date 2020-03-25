@@ -1,7 +1,7 @@
 //  adapted from:
 // https://embed.plnkr.co/plunk/NAOYuT
 
-/*  board Layout:  < game >< x >< y >
+/*  board Layout:  < game >< Y >< X >
 1.1.1 | 1.1.2 | 1.1.3   ||   2.1.1 | 2.1.2 | 1.2.3   ||   3.1.1 | 3.1.2 | 3.1.3
 -----------------------------------------------------------------------
 1.2.1 | 1.2.2 | 1.2.3   ||   2.2.1 | 2.2.2 | 2.2.3   ||   3.2.1 | 3.2.2 | 3.2.3
@@ -32,7 +32,6 @@
 //  Undo function ?
 //  Why does winning message box pop up then the screen gets colored in?
 //  Make network game so two cam play over network
-//  use an XOR to toggle petween players instead of CountClick
 //  change Alerts to Modals
 //        https://www.w3schools.com/howto/howto_css_modals.asp
 //        https://embed.plnkr.co/plunk/RHIPp8
@@ -49,7 +48,8 @@ var currentGameNumber = -1;
 var gameNumber = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 var gameLocation = [1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 3.1, 3.2, 3.3];
 var player = 0;  // 0 for player 1, 1 for pkayer 2
-var clickCount = 0;
+const player1=0;
+const player2=1;
 var boxesTaken = 0;
 const OuterGame = 9;
 var Won = false;
@@ -60,7 +60,7 @@ function clicked(strId) {  //  get game ( remove first two charageters)
     var strBox = strId.slice(2);
     var box = parseFloat(strBox); //  remove the period
 
-    //console.log("clicked(\"" + strId + "\");");
+    //console.log("clicked(\"" + strId + "\");" Current game # : "  + currentGameNumber");
     if (boxesTaken > 79) {  // game over
         if (!Won)
             alert("CATS game \n\nPlease start another game");
@@ -74,22 +74,16 @@ function clicked(strId) {  //  get game ( remove first two charageters)
         return;
     }
 
-    //  get player
-    if (clickCount % 2 == 0)
-        player = 0;  //player 1
-    else
-        player = 1; // player 2
-
-    //  if you are not clicking in an open square. exit function
-    if (playerScore[0][game].indexOf(box) >= 0 || playerScore[1][game].indexOf(box) >= 0)
+      //  if you are not clicking in an open square. exit function
+    if (playerScore[player1][game].indexOf(box) >= 0 || playerScore[player2][game].indexOf(box) >= 0)
         return;
 
     //  the square is open
-    var color = (player == 0) ? "red" : "green";
-    var availableColor = (player == 0) ? "lightgreen" : "lightpink";
+    var color = (player == player1) ? "red" : "green";
+    var availableColor = (player == player1) ? "lightgreen" : "lightpink";
     document.getElementById(strId).style.backgroundColor = color;  // paint it red for player one
     playerScore[player][game].push(box); //  put this square's id in the array
-    clickCount++;  // increment clickcount
+
     boxesTaken++;
 
     subGameWinner = checkWinnerPlayer(playerScore[player][game]);
@@ -111,13 +105,13 @@ function clicked(strId) {  //  get game ( remove first two charageters)
         } //  if outer game won
     }  //  if sub-winner
     // if the box clicked in the inner game is in the outter game,  the next player can move anywhere
-    if (playerScore[0][OuterGame].indexOf(box) >= 0 || playerScore[1][OuterGame].indexOf(box) >= 0 || catsGame.indexOf(box) >= 0)
+    if (playerScore[player1][OuterGame].indexOf(box) >= 0 || playerScore[player2][OuterGame].indexOf(box) >= 0 || catsGame.indexOf(box) >= 0)
         currentGameNumber = -1;
     else
         currentGameNumber = gameLocation.indexOf(box);
 
     //  set next turn color
-    color = (player != 0) ? "red" : "green";
+    color = (player != player1) ? "red" : "green";
     document.getElementById("turnbox").style.backgroundColor = color;
 
     if (!Won) {
@@ -159,6 +153,7 @@ function clicked(strId) {  //  get game ( remove first two charageters)
                 }
         }  //  end else
     } //  end if NOT Won
+    player=(player ^ player1)?player1:player2;  //  change player
 }  //  end clicked function
 
 function Reset() {
@@ -169,7 +164,9 @@ function Undo() {
     //  remove the players move and make that square white again
     //  remove the shading and put it back to where it was
     //  change the color of the "turn" indicator
-    clickCount--;  //  remove one from teh Clickcount
+    player=(player ^ player1)?player1:player2;
+    boxesTaken++; //  need to take in to account the last move won a subgame
+
 
 }
 
@@ -227,10 +224,10 @@ function checkForDiagonal(playerScoreD) {
 
 function pageLoad() {
     //  var test = require('./test.js')
-    //rowWin();
-    //catsGameTest();
-    //colWin()
-    //diagWin();
+    //rowWin();   //  green wins across the top
+    //catsGameTest();  //LIS
+    //colWin()   //  green wins first column
+    //diagWin();   //  green wins top left ot bottom right
 }
 function diagWin() {
     clicked("1.1.1");
