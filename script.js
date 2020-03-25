@@ -29,7 +29,6 @@
 //  // TODO:
 //  add AI so you can play by yourself
 //  make the moves x's and o's instead of blocks
-//  Undo function ?
 //  Make network game so two cam play over network
 //  get test cases in a different file
 
@@ -64,14 +63,14 @@ function clicked(strId) {  //  get game ( remove first two charageters)
     //console.log("clicked(\"" + strId + "\");" Current game # : "  + currentGameNumber");
     if (boxesTaken > 79) {  // game over
         if (!won)
-            alert("CATS game \n\nPlease start another game");
+            PopUpMessage("CATS game \n\nPlease start another game");
         else
-            alert("Please start another game");
+            PopUpMessage("Please start another game");
         return;
     }
     //  user didin't click in available subgame
     if (currentGameNumber != -1 && game != currentGameNumber) {
-        alert("Please make your selection in the correct sub-game");
+        PopUpMessage("Please make your selection in the correct sub-game");
         return;
     }
 
@@ -100,7 +99,7 @@ function clicked(strId) {  //  get game ( remove first two charageters)
                 document.getElementById(boxTemp).style.backgroundColor = color;
             }
         if (checkWinnerPlayer(playerScore[player][OUTERGAME])) {
-            alert(color + ' wins click play again');
+            PopUpMessage(color + ' wins click play again');
             boxesTaken = 82;
             won = true;
         } //  if outer game won
@@ -253,6 +252,28 @@ function checkForDiagonal(playerScoreD) {
             return true; ""
     }
     return false;
+}
+
+// got the modal code form:
+//  https://www.w3schools.com/howto/howto_css_modals.asp
+function PopUpMessage(message){
+  var modal = document.getElementById("myModal");
+  var modalContent = document.getElementById("mc");
+  modalContent.innerHTML= "<br><span id=\"spanID\" class=\"close\" onclick=\"spanClicked()\">×</span><br><p>" +message+"</p><br>";
+  //modalContent.textContent= ???;
+  modal.style.display = "block";
+}
+// When the user clicks on <span> (x), close the modal
+function spanClicked() {
+  var modal = document.getElementById("myModal");
+  modal.style.display = "none";
+}
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function windowClicked(event) {
+  var modal = document.getElementById("myModal");
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
 }
 
 function pageLoad() {
