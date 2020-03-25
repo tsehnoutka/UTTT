@@ -259,7 +259,7 @@ function checkForDiagonal(playerScoreD) {
 function PopUpMessage(message){
   var modal = document.getElementById("myModal");
   var modalContent = document.getElementById("mc");
-  modalContent.innerHTML= "<br><span id=\"spanID\" class=\"close\" onclick=\"spanClicked()\">×</span><br><p>" +message+"</p><br>";
+  modalContent.innerHTML= "<br><span id=\"spanID\" class=\"close\" onclick=\"spanClicked()\">x</span><br><br><p>" +message+"</p><br>";
   //modalContent.textContent= ???;
   modal.style.display = "block";
 }
