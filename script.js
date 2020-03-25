@@ -165,9 +165,10 @@ function Undo() {
   var previousBox = parseFloat(strP_Box);
 
   //  I think i can make this a function passing the game number
+for (g = 0; g < 9; g++) // game
   for (x = 1; x <= 3; x++)
     for (y = 1; y <= 3; y++) {
-      myIndex = currentGameNumber + 1 + "." + x + "." + y;
+      myIndex = g + 1 + "." + x + "." + y;
       if ((document.getElementById(myIndex).style.backgroundColor == "lightgreen") ||
         (document.getElementById(myIndex).style.backgroundColor == "lightpink"))
         document.getElementById(myIndex).style.backgroundColor = ""
@@ -179,7 +180,7 @@ function Undo() {
   player = (player ^ PLAYER1) ? PLAYER1 : PLAYER2;
   var lastcolor = (player == PLAYER1) ? "red" : "green";
   if (1 != boxesTaken) {
-    shadeBoxes(previousGame, lastcolor);
+    shadeBoxes(previousGame, lastshade);
   }
   document.getElementById("turnbox").style.backgroundColor = lastcolor;
   boxesTaken--;
