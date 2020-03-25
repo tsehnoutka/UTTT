@@ -132,26 +132,25 @@ function clicked(strId) { //  get game ( remove first two charageters)
     //  show available moves
     //  if the next move is in an inner game that is already full, the player van move anywhere
     if (currentGameNumber == -1) {
-      for (g = 1; g <= 9; g++) // game
-        for (x = 1; x <= 3; x++)
-          for (y = 1; y <= 3; y++) {
-            myIndex = g + "." + x + "." + y;
-            if (document.getElementById(myIndex).style.backgroundColor == "")
-              document.getElementById(myIndex).style.backgroundColor = availableColor;
-          } //  end for y
+      for (g = 0; g < 9; g++) // game
+        shadeBoxes(g, availableColor);
     } else { //  just highlight the inner game there the playerc can move
-      for (x = 1; x <= 3; x++)
-        for (y = 1; y <= 3; y++) {
-          myIndex = currentGameNumber + 1 + "." + x + "." + y;
-          if (document.getElementById(myIndex).style.backgroundColor == "")
-            document.getElementById(myIndex).style.backgroundColor = availableColor;
-        }
+      shadeBoxes(currentGameNumber,availableColor);
     } //  end else
   } //  end if NOT won
   player = (player ^ PLAYER1) ? PLAYER1 : PLAYER2; //  change player
   previousIDs.push(strId);
   document.getElementById('Undo').disabled = false;
 } //  end clicked function
+
+function shadeBoxes(GameNumber, shadeColor) {
+for (x = 1; x <= 3; x++)
+  for (y = 1; y <= 3; y++) {
+    myIndex = GameNumber + 1 + "." + x + "." + y;
+    if (document.getElementById(myIndex).style.backgroundColor == "")
+      document.getElementById(myIndex).style.backgroundColor = shadeColor;
+  } //  end for y
+} //end shade Boxes
 
 function Reset() {
   location.reload();
@@ -165,13 +164,11 @@ function Undo() {
   var strP_Box = previousID.slice(2);
   var previousBox = parseFloat(strP_Box);
 
-  //console.log("current game = " + currentGameNumber);
-  //console.log("current player = " + player);
-  //restore the current sub game
   //  I think i can make this a function passing the game number
+for (g = 0; g < 9; g++) // game
   for (x = 1; x <= 3; x++)
     for (y = 1; y <= 3; y++) {
-      myIndex = currentGameNumber + 1 + "." + x + "." + y;
+      myIndex = g + 1 + "." + x + "." + y;
       if ((document.getElementById(myIndex).style.backgroundColor == "lightgreen") ||
         (document.getElementById(myIndex).style.backgroundColor == "lightpink"))
         document.getElementById(myIndex).style.backgroundColor = ""
@@ -183,13 +180,7 @@ function Undo() {
   player = (player ^ PLAYER1) ? PLAYER1 : PLAYER2;
   var lastcolor = (player == PLAYER1) ? "red" : "green";
   if (1 != boxesTaken) {
-    for (x = 1; x <= 3; x++)
-      for (y = 1; y <= 3; y++) {
-        myIndex = previousGame + 1 + "." + x + "." + y;
-        if (document.getElementById(myIndex).style.backgroundColor == "")
-          document.getElementById(myIndex).style.backgroundColor = lastshade;
-      } //  end for y
-
+    shadeBoxes(previousGame, lastshade);
   }
   document.getElementById("turnbox").style.backgroundColor = lastcolor;
   boxesTaken--;
