@@ -30,8 +30,8 @@ function clicked(strId) {  //  get game ( remove first two charageters)
     var strBox = strId.slice(2);
     var box = parseFloat(strBox); //  remove the period
 //
-console.log("clicked(\""+strId+"\");")
-    if (boxesTaken > 81) {
+console.log("clicked(\""+strId+"\");");
+    if (boxesTaken > 79) {
         if (!Won)
             alert("CATS game Please start another game");
         else
@@ -205,10 +205,9 @@ function checkForDiagonal(playerScoreD) {
 function pageLoad(){
 //  var test = require('./test.js')
   //rowWin();
-  catsGameTest();
+  //catsGameTest();
 }
 function catsGameTest(){
-
   clicked("1.1.1");
   clicked("1.2.2");
   clicked("5.2.1");
@@ -229,7 +228,6 @@ function catsGameTest(){
   clicked("2.3.2");
   clicked("8.1.1");
   clicked("1.3.1");
-  clicked("4.3.2");
   clicked("7.3.1");
   clicked("7.2.1");
   clicked("4.1.3");
@@ -276,6 +274,8 @@ function catsGameTest(){
   clicked("3.2.2");
   clicked("9.3.3");
   clicked("2.2.1");
+  clicked("2.1.2");
+  clicked("2.1.3");
 }
 function rowWin(){
   clicked("1.1.1");
