@@ -32,10 +32,6 @@
 //  Make network game so two cam play over network
 //  get test cases in a different file
 
-//  Why does winning message box pop up then the screen gets colored in?
-//  change Alerts to Modals
-//        https://www.w3schools.com/howto/howto_css_modals.asp
-//        https://embed.plnkr.co/plunk/RHIPp8
 
 var playerScore = new Array(); //  player, game, array of squares
 for (p = 0; p < 2; p++) {
