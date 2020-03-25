@@ -5,8 +5,11 @@
 //  add AI so you can play by yourself
 //  make the moves x's ond o's instead of blocks
 //  Undo function ?
-//  Why does winning message box pop up then the screen gets colored in?
+//  Why does winning message box pop up then the screen gets colored in? -
+//       Cause it is an even driven program,  the screen doesn't get updated
+//       until the end of the function
 //  Make network game so two cam play over network
+//  use XOR to determine whose turn it is instead of Click Count
 
 var playerScore = new Array();  //  player, game, array of squares
 for (p = 0; p < 2; p++) {
@@ -205,7 +208,7 @@ function checkForDiagonal(playerScoreD) {
 function pageLoad(){
 //  var test = require('./test.js')
   //rowWin();
-  //catsGameTest();
+  catsGameTest();
   //colWin()
   //diagWin();
 }
@@ -277,7 +280,6 @@ function catsGameTest(){
   clicked("2.3.2");
   clicked("8.1.1");
   clicked("1.3.1");
-  clicked("4.3.2");
   clicked("7.3.1");
   clicked("7.2.1");
   clicked("4.1.3");
