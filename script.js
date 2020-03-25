@@ -326,6 +326,8 @@ function catsGameTest(){
   clicked("3.2.2");
   clicked("9.3.3");
   clicked("2.2.1");
+  clicked("2.1.2");
+  clicked("2.1.3");
 }
 function rowWin(){
   clicked("1.1.1");
