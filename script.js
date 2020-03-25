@@ -205,7 +205,55 @@ function checkForDiagonal(playerScoreD) {
 function pageLoad(){
 //  var test = require('./test.js')
   //rowWin();
-  catsGameTest();
+  //catsGameTest();
+  //colWin()
+  //diagWin();
+}
+function diagWin() {
+clicked("1.1.1");
+clicked("1.2.1");
+clicked("4.1.1");
+clicked("1.2.3");
+clicked("6.1.1");
+clicked("1.2.2");
+clicked("5.3.1");
+clicked("7.2.1");
+clicked("4.2.2");
+clicked("5.2.2");
+clicked("5.1.1");
+clicked("4.1.2");
+clicked("2.2.2");
+clicked("5.1.2");
+clicked("2.3.2");
+clicked("8.3.1");
+clicked("7.2.2");
+clicked("5.3.2");
+clicked("8.3.3");
+clicked("9.1.3");
+clicked("3.3.3");
+clicked("9.3.1");
+clicked("7.3.3");
+clicked("9.2.2");
+}
+function colWin(){
+  clicked("1.1.1");
+  clicked("1.2.2");
+  clicked("5.1.1");
+  clicked("1.2.1");
+  clicked("4.1.1");
+  clicked("1.2.3");
+  clicked("6.2.1");
+  clicked("4.1.3");
+  clicked("3.2.1");
+  clicked("4.3.1");
+  clicked("7.2.1");
+  clicked("4.2.2");
+  clicked("5.3.1");
+  clicked("7.1.1");
+  clicked("2.3.1");
+  clicked("7.3.3");
+  clicked("9.3.1");
+  clicked("7.2.2");
 }
 function catsGameTest(){
 
