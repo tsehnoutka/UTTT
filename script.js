@@ -30,12 +30,13 @@
 //  add AI so you can play by yourself
 //  make the moves x's and o's instead of blocks
 //  Undo function ?
-//  Why does winning message box pop up then the screen gets colored in?
 //  Make network game so two cam play over network
+//  get test cases in a different file
+
+//  Why does winning message box pop up then the screen gets colored in?
 //  change Alerts to Modals
 //        https://www.w3schools.com/howto/howto_css_modals.asp
 //        https://embed.plnkr.co/plunk/RHIPp8
-//  do I really need the gameNumber array ??  I don't think I do
 
 var playerScore = new Array();  //  player, game, array of squares
 for (p = 0; p < 2; p++) {
@@ -45,14 +46,14 @@ for (p = 0; p < 2; p++) {
 }
 var catsGame = new Array();
 var currentGameNumber = -1;
-var gameNumber = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 var gameLocation = [1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 3.1, 3.2, 3.3];
 var player = 0;  // 0 for player 1, 1 for pkayer 2
-const player1=0;
-const player2=1;
+const PLAYER1=0;
+const PLAYER2=1;
 var boxesTaken = 0;
-const OuterGame = 9;
-var Won = false;
+const OUTERGAME = 9;
+var won = false;
+var previousIDs = new Array();
 
 
 function clicked(strId) {  //  get game ( remove first two charageters)
@@ -62,7 +63,7 @@ function clicked(strId) {  //  get game ( remove first two charageters)
 
     //console.log("clicked(\"" + strId + "\");" Current game # : "  + currentGameNumber");
     if (boxesTaken > 79) {  // game over
-        if (!Won)
+        if (!won)
             alert("CATS game \n\nPlease start another game");
         else
             alert("Please start another game");
@@ -75,12 +76,12 @@ function clicked(strId) {  //  get game ( remove first two charageters)
     }
 
       //  if you are not clicking in an open square. exit function
-    if (playerScore[player1][game].indexOf(box) >= 0 || playerScore[player2][game].indexOf(box) >= 0)
+    if (playerScore[PLAYER1][game].indexOf(box) >= 0 || playerScore[PLAYER2][game].indexOf(box) >= 0)
         return;
 
     //  the square is open
-    var color = (player == player1) ? "red" : "green";
-    var availableColor = (player == player1) ? "lightgreen" : "lightpink";
+    var color = (player == PLAYER1) ? "red" : "green";
+    var availableColor = (player == PLAYER1) ? "lightgreen" : "lightpink";
     document.getElementById(strId).style.backgroundColor = color;  // paint it red for player one
     playerScore[player][game].push(box); //  put this square's id in the array
 
@@ -88,7 +89,7 @@ function clicked(strId) {  //  get game ( remove first two charageters)
 
     subGameWinner = checkWinnerPlayer(playerScore[player][game]);
     if (subGameWinner) {  //  set that whole section to the color of the current player
-        playerScore[player][OuterGame].push(gameLocation[game]);
+        playerScore[player][OUTERGAME].push(gameLocation[game]);
         for (x = 1; x <= 3; x++)
             for (y = 1; y <= 3; y++) {
                 boxTemp = game + 1 + "." + x + "." + y;
@@ -98,23 +99,23 @@ function clicked(strId) {  //  get game ( remove first two charageters)
                 }
                 document.getElementById(boxTemp).style.backgroundColor = color;
             }
-        if (checkWinnerPlayer(playerScore[player][OuterGame])) {
+        if (checkWinnerPlayer(playerScore[player][OUTERGAME])) {
             alert(color + ' wins click play again');
             boxesTaken = 82;
-            Won = true;
+            won = true;
         } //  if outer game won
     }  //  if sub-winner
     // if the box clicked in the inner game is in the outter game,  the next player can move anywhere
-    if (playerScore[player1][OuterGame].indexOf(box) >= 0 || playerScore[player2][OuterGame].indexOf(box) >= 0 || catsGame.indexOf(box) >= 0)
+    if (playerScore[PLAYER1][OUTERGAME].indexOf(box) >= 0 || playerScore[PLAYER2][OUTERGAME].indexOf(box) >= 0 || catsGame.indexOf(box) >= 0)
         currentGameNumber = -1;
     else
         currentGameNumber = gameLocation.indexOf(box);
 
     //  set next turn color
-    color = (player != player1) ? "red" : "green";
+    color = (player != PLAYER1) ? "red" : "green";
     document.getElementById("turnbox").style.backgroundColor = color;
 
-    if (!Won) {
+    if (!won) {
         if (!subGameWinner) {
             var p1g = playerScore[0][game].length;
             var p2g = playerScore[1][game].length;
@@ -152,8 +153,10 @@ function clicked(strId) {  //  get game ( remove first two charageters)
                         document.getElementById(myIndex).style.backgroundColor = availableColor;
                 }
         }  //  end else
-    } //  end if NOT Won
-    player=(player ^ player1)?player1:player2;  //  change player
+    } //  end if NOT won
+    player=(player ^ PLAYER1)?PLAYER1:PLAYER2;  //  change player
+    previousIDs.push(strId);
+    document.getElementById('Undo').disabled=false;
 }  //  end clicked function
 
 function Reset() {
@@ -161,13 +164,43 @@ function Reset() {
 }
 
 function Undo() {
-    //  remove the players move and make that square white again
-    //  remove the shading and put it back to where it was
-    //  change the color of the "turn" indicator
-    player=(player ^ player1)?player1:player2;
-    boxesTaken++; //  need to take in to account the last move won a subgame
+      var previousID = previousIDs.pop();
+      console.log("previous ID = " + previousID);
+      var previousGame = previousID.substring(0, 1) - 1;
+      console.log("previous Game = " + previousGame);
+      var strP_Box = previousID.slice(2);
+      var previousBox = parseFloat(strP_Box);
 
+      //console.log("current game = " + currentGameNumber);
+      //console.log("current player = " + player);
+      //restore the current sub game
+      //  I think i can make this a function passing the game number
+      for (x = 1; x <= 3; x++)
+          for (y = 1; y <= 3; y++) {
+              myIndex = currentGameNumber+1 + "." + x + "." + y;
+              if ((document.getElementById(myIndex).style.backgroundColor == "lightgreen") ||
+                  (document.getElementById(myIndex).style.backgroundColor == "lightpink"))
+                  document.getElementById(myIndex).style.backgroundColor = ""
+          }  //  end for y
 
+     document.getElementById(previousID).style.backgroundColor = "";
+
+      // remove last move
+      var lastshade = (player != PLAYER1) ? "lightpink" : "lightgreen";
+      player=(player ^ PLAYER1)?PLAYER1:PLAYER2;
+      var lastcolor = (player == PLAYER1) ? "red" : "green";
+      for (x = 1; x <= 3; x++)
+          for (y = 1; y <= 3; y++) {
+              myIndex = previousGame+1 + "." + x + "." + y;
+              if(document.getElementById(myIndex).style.backgroundColor == "")
+                  document.getElementById(myIndex).style.backgroundColor = lastshade;
+          }  //  end for y
+      document.getElementById("turnbox").style.backgroundColor = lastcolor;
+      boxesTaken--;
+      currentGameNumber=previousGame;
+      playerScore[player][previousGame].indexOf(previousBox);
+      playerScore[player][previousGame].splice(playerScore[player][previousGame].indexOf(previousBox), 1);
+      document.getElementById('Undo').disabled=true;
 }
 
 function checkWinnerPlayer(currentGame) {
