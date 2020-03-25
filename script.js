@@ -3,10 +3,11 @@
 
 //  // TODO:
 //  add AI so you can play by yourself
-//  make the moves x's ond o's instead of blocks
+//  make the moves x's and o's instead of blocks
 //  Undo function ?
 //  Why does winning message box pop up then the screen gets colored in?
 //  Make network game so two cam play over network
+//  use an XOR to toggle petween players instead of CountClick
 
 var playerScore = new Array();  //  player, game, array of squares
 for (p = 0; p < 2; p++) {
@@ -14,13 +15,13 @@ for (p = 0; p < 2; p++) {
     for (g = 0; g < 10; g++)
         playerScore[p][g] = new Array();
 }
-var catsGame=new Array();
+var catsGame = new Array();
 var currentGameNumber = -1;
 var gameNumber = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 var gameLocation = [1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 3.1, 3.2, 3.3];
 var player = 0;  // 0 for player 1, 1 for pkayer 2
 var clickCount = 0;
-var  boxesTaken=0;
+var boxesTaken = 0;
 const OuterGame = 9;
 var Won = false;
 
@@ -29,8 +30,8 @@ function clicked(strId) {  //  get game ( remove first two charageters)
     var game = strId.substring(0, 1) - 1; //get the inner game #  ( arrays starts at 0)
     var strBox = strId.slice(2);
     var box = parseFloat(strBox); //  remove the period
-//
-console.log("clicked(\""+strId+"\");");
+    //
+    console.log("clicked(\"" + strId + "\");");
     if (boxesTaken > 79) {
         if (!Won)
             alert("CATS game Please start another game");
@@ -51,63 +52,63 @@ console.log("clicked(\""+strId+"\");");
 
     //console.log("BEGINNING - Player: " + player + " id: " + strId + " game: " + game + " box: " + box + " currentGameNumber: " + currentGameNumber);
 
-    if (playerScore[0][game].indexOf(box) >= 0 || playerScore[1][game].indexOf(box) >= 0 )
-      return;
+    if (playerScore[0][game].indexOf(box) >= 0 || playerScore[1][game].indexOf(box) >= 0)
+        return;
 
-             //  the square is open
-        var color = (player == 0) ? "red" : "green";
-        var availableColor = (player == 0) ? "lightgreen" : "lightpink";
-        document.getElementById(strId).style.backgroundColor = color;  // paint it red for player one
-        playerScore[player][game].push(box); //  put this square's id in the array
-        clickCount++;  // increment clickcount
-        boxesTaken++;
+    //  the square is open
+    var color = (player == 0) ? "red" : "green";
+    var availableColor = (player == 0) ? "lightgreen" : "lightpink";
+    document.getElementById(strId).style.backgroundColor = color;  // paint it red for player one
+    playerScore[player][game].push(box); //  put this square's id in the array
+    clickCount++;  // increment clickcount
+    boxesTaken++;
 
-        subGameWinner = checkWinnerPlayer(playerScore[player][game]);
-        if (subGameWinner) {  //  set that whole section to the color of the current player
-            playerScore[player][OuterGame].push(gameLocation[game]);
-            for (x = 1; x <= 3; x++)
-                for (y = 1; y <= 3; y++) {
-                  boxTemp = game + 1 + "." + x + "." + y;
-                  if ((document.getElementById(boxTemp).style.backgroundColor != "green") &&
-                      (document.getElementById(boxTemp).style.backgroundColor != "red" ) ) {
-                        //console.log("***********************************")
-                       boxesTaken++;
-                     }
-                  document.getElementById(boxTemp).style.backgroundColor = color;
+    subGameWinner = checkWinnerPlayer(playerScore[player][game]);
+    if (subGameWinner) {  //  set that whole section to the color of the current player
+        playerScore[player][OuterGame].push(gameLocation[game]);
+        for (x = 1; x <= 3; x++)
+            for (y = 1; y <= 3; y++) {
+                boxTemp = game + 1 + "." + x + "." + y;
+                if ((document.getElementById(boxTemp).style.backgroundColor != "green") &&
+                    (document.getElementById(boxTemp).style.backgroundColor != "red")) {
+                    //console.log("***********************************")
+                    boxesTaken++;
                 }
-            if (checkWinnerPlayer(playerScore[player][OuterGame])) {
-                alert(color + ' wins click play again');
-                boxesTaken = 82;
-                Won = true;
+                document.getElementById(boxTemp).style.backgroundColor = color;
             }
+        if (checkWinnerPlayer(playerScore[player][OuterGame])) {
+            alert(color + ' wins click play again');
+            boxesTaken = 82;
+            Won = true;
         }
-        // if the box clicked in the inner game is in the outter game,  the next player can move anywhere
+    }
+    // if the box clicked in the inner game is in the outter game,  the next player can move anywhere
 
-        //  Need to check if the  box is inthe cats array
-        if (playerScore[0][OuterGame].indexOf(box) >= 0 || playerScore[1][OuterGame].indexOf(box) >= 0  || catsGame.indexOf(box) >= 0)
-            currentGameNumber = -1;
-        else
-            currentGameNumber = gameLocation.indexOf(box);
+    //  Need to check if the  box is inthe cats array
+    if (playerScore[0][OuterGame].indexOf(box) >= 0 || playerScore[1][OuterGame].indexOf(box) >= 0 || catsGame.indexOf(box) >= 0)
+        currentGameNumber = -1;
+    else
+        currentGameNumber = gameLocation.indexOf(box);
 
 
     color = (player != 0) ? "red" : "green";
     document.getElementById("turnbox").style.backgroundColor = color;
-  //  console.log("END - Player: " + player + " id: " + strId + " game: " + game + " box: " + box + " currentGameNumber: " + currentGameNumber);
+    //  console.log("END - Player: " + player + " id: " + strId + " game: " + game + " box: " + box + " currentGameNumber: " + currentGameNumber);
 
     if (!Won) {
-      if (!subGameWinner){
-      var p1g = playerScore[0][game].length;
-      var p2g = playerScore[1][game].length;
-      if(p1g +p2g ==9){
-        catsGame.push(gameLocation[game]);
+        if (!subGameWinner) {
+            var p1g = playerScore[0][game].length;
+            var p2g = playerScore[1][game].length;
+            if (p1g + p2g == 9) {
+                catsGame.push(gameLocation[game]);
+            }
         }
-      }
         //  clear available moves
         for (g = 1; g <= 9; g++)  // game
             for (x = 1; x <= 3; x++)
                 for (y = 1; y <= 3; y++) {
                     myIndex = g + "." + x + "." + y;
-                  //  console.log(myIndex + " : " + document.getElementById(myIndex).style.backgroundColor);
+                    //  console.log(myIndex + " : " + document.getElementById(myIndex).style.backgroundColor);
                     if ((document.getElementById(myIndex).style.backgroundColor == "lightgreen") ||
                         (document.getElementById(myIndex).style.backgroundColor == "lightpink"))
                         document.getElementById(myIndex).style.backgroundColor = ""
@@ -197,153 +198,153 @@ function checkForDiagonal(playerScoreD) {
         if (playerScoreD.indexOf(1.1) > -1 && playerScoreD.indexOf(2.2) > -1 && playerScoreD.indexOf(3.3) > -1)
             return true;
         if (playerScoreD.indexOf(1.3) > -1 && playerScoreD.indexOf(2.2) > -1 && playerScoreD.indexOf(3.1) > -1)
-            return true;""
+            return true; ""
     }
     return false;
 }
 
-function pageLoad(){
-//  var test = require('./test.js')
-  //rowWin();
-  //catsGameTest();
-  //colWin()
-  diagWin();
+function pageLoad() {
+    //  var test = require('./test.js')
+    //rowWin();
+    //catsGameTest();
+    //colWin()
+    diagWin();
 }
 function diagWin() {
-clicked("1.1.1");
-clicked("1.2.1");
-clicked("4.1.1");
-clicked("1.2.3");
-clicked("6.1.1");
-clicked("1.2.2");
-clicked("5.3.1");
-clicked("7.2.1");
-clicked("4.2.2");
-clicked("5.2.2");
-clicked("5.1.1");
-clicked("4.1.2");
-clicked("2.2.2");
-clicked("5.1.2");
-clicked("2.3.2");
-clicked("8.3.1");
-clicked("7.2.2");
-clicked("5.3.2");
-clicked("8.3.3");
-clicked("9.1.3");
-clicked("3.3.3");
-clicked("9.3.1");
-clicked("7.3.3");
-clicked("9.2.2");
+    clicked("1.1.1");
+    clicked("1.2.1");
+    clicked("4.1.1");
+    clicked("1.2.3");
+    clicked("6.1.1");
+    clicked("1.2.2");
+    clicked("5.3.1");
+    clicked("7.2.1");
+    clicked("4.2.2");
+    clicked("5.2.2");
+    clicked("5.1.1");
+    clicked("4.1.2");
+    clicked("2.2.2");
+    clicked("5.1.2");
+    clicked("2.3.2");
+    clicked("8.3.1");
+    clicked("7.2.2");
+    clicked("5.3.2");
+    clicked("8.3.3");
+    clicked("9.1.3");
+    clicked("3.3.3");
+    clicked("9.3.1");
+    clicked("7.3.3");
+    clicked("9.2.2");
 }
-function colWin(){
-  clicked("1.1.1");
-  clicked("1.2.2");
-  clicked("5.1.1");
-  clicked("1.2.1");
-  clicked("4.1.1");
-  clicked("1.2.3");
-  clicked("6.2.1");
-  clicked("4.1.3");
-  clicked("3.2.1");
-  clicked("4.3.1");
-  clicked("7.2.1");
-  clicked("4.2.2");
-  clicked("5.3.1");
-  clicked("7.1.1");
-  clicked("2.3.1");
-  clicked("7.3.3");
-  clicked("9.3.1");
-  clicked("7.2.2");
+function colWin() {
+    clicked("1.1.1");
+    clicked("1.2.2");
+    clicked("5.1.1");
+    clicked("1.2.1");
+    clicked("4.1.1");
+    clicked("1.2.3");
+    clicked("6.2.1");
+    clicked("4.1.3");
+    clicked("3.2.1");
+    clicked("4.3.1");
+    clicked("7.2.1");
+    clicked("4.2.2");
+    clicked("5.3.1");
+    clicked("7.1.1");
+    clicked("2.3.1");
+    clicked("7.3.3");
+    clicked("9.3.1");
+    clicked("7.2.2");
 }
-function catsGameTest(){
-  clicked("1.1.1");
-  clicked("1.2.2");
-  clicked("5.2.1");
-  clicked("4.2.3");
-  clicked("6.3.1");
-  clicked("7.3.2");
-  clicked("8.3.3");
-  clicked("9.1.3");
-  clicked("3.1.2");
-  clicked("2.1.1");
-  clicked("1.3.3");
-  clicked("9.2.1");
-  clicked("4.2.2");
-  clicked("5.2.2");
-  clicked("5.3.2");
-  clicked("8.2.2");
-  clicked("5.1.2");
-  clicked("2.3.2");
-  clicked("8.1.1");
-  clicked("1.3.1");
-  clicked("7.3.1");
-  clicked("7.2.1");
-  clicked("4.1.3");
-  clicked("3.2.1");
-  clicked("4.3.3");
-  clicked("9.3.2");
-  clicked("8.3.2");
-  clicked("8.3.1");
-  clicked("7.3.3");
-  clicked("9.2.3");
-  clicked("6.2.3");
-  clicked("6.2.2");
-  clicked("5.2.3");
-  clicked("6.3.2");
-  clicked("8.1.2");
-  clicked("2.2.3");
-  clicked("6.1.1");
-  clicked("1.2.1");
-  clicked("4.2.1");
-  clicked("4.3.2");
-  clicked("8.2.1");
-  clicked("4.3.1");
-  clicked("7.1.1");
-  clicked("1.1.2");
-  clicked("2.2.2");
-  clicked("5.3.1");
-  clicked("7.2.2");
-  clicked("5.1.3");
-  clicked("3.3.1");
-  clicked("8.1.3");
-  clicked("3.3.2");
-  clicked("3.3.3");
-  clicked("9.2.2");
-  clicked("4.1.2");
-  clicked("2.3.1");
-  clicked("4.1.1");
-  clicked("1.1.3");
-  clicked("3.1.1");
-  clicked("1.2.3");
-  clicked("6.1.2");
-  clicked("2.3.3");
-  clicked("9.3.1");
-  clicked("9.1.1");
-  clicked("3.2.2");
-  clicked("9.3.3");
-  clicked("2.2.1");
-  clicked("2.1.2");
-  clicked("2.1.3");
+function catsGameTest() {
+    clicked("1.1.1");
+    clicked("1.2.2");
+    clicked("5.2.1");
+    clicked("4.2.3");
+    clicked("6.3.1");
+    clicked("7.3.2");
+    clicked("8.3.3");
+    clicked("9.1.3");
+    clicked("3.1.2");
+    clicked("2.1.1");
+    clicked("1.3.3");
+    clicked("9.2.1");
+    clicked("4.2.2");
+    clicked("5.2.2");
+    clicked("5.3.2");
+    clicked("8.2.2");
+    clicked("5.1.2");
+    clicked("2.3.2");
+    clicked("8.1.1");
+    clicked("1.3.1");
+    clicked("7.3.1");
+    clicked("7.2.1");
+    clicked("4.1.3");
+    clicked("3.2.1");
+    clicked("4.3.3");
+    clicked("9.3.2");
+    clicked("8.3.2");
+    clicked("8.3.1");
+    clicked("7.3.3");
+    clicked("9.2.3");
+    clicked("6.2.3");
+    clicked("6.2.2");
+    clicked("5.2.3");
+    clicked("6.3.2");
+    clicked("8.1.2");
+    clicked("2.2.3");
+    clicked("6.1.1");
+    clicked("1.2.1");
+    clicked("4.2.1");
+    clicked("4.3.2");
+    clicked("8.2.1");
+    clicked("4.3.1");
+    clicked("7.1.1");
+    clicked("1.1.2");
+    clicked("2.2.2");
+    clicked("5.3.1");
+    clicked("7.2.2");
+    clicked("5.1.3");
+    clicked("3.3.1");
+    clicked("8.1.3");
+    clicked("3.3.2");
+    clicked("3.3.3");
+    clicked("9.2.2");
+    clicked("4.1.2");
+    clicked("2.3.1");
+    clicked("4.1.1");
+    clicked("1.1.3");
+    clicked("3.1.1");
+    clicked("1.2.3");
+    clicked("6.1.2");
+    clicked("2.3.3");
+    clicked("9.3.1");
+    clicked("9.1.1");
+    clicked("3.2.2");
+    clicked("9.3.3");
+    clicked("2.2.1");
+    clicked("2.1.2");
+    clicked("2.1.3");
 }
-function rowWin(){
-  clicked("1.1.1");
-  clicked("1.2.2");
-  clicked("5.1.1");
-  clicked("1.2.1");
-  clicked("4.1.1");
-  clicked("1.2.3");
-  clicked("6.1.2");
-  clicked("2.3.1");
-  clicked("7.1.2");
-  clicked("2.2.2");
-  clicked("5.1.2");
-  clicked("2.1.3");
-  clicked("3.2.3");
-  clicked("6.3.2");
-  clicked("8.1.3");
-  clicked("3.1.2");
-  clicked("7.1.3");
-  clicked("3.2.2");
-  clicked("5.1.3");
-  clicked("3.3.2");
+function rowWin() {
+    clicked("1.1.1");
+    clicked("1.2.2");
+    clicked("5.1.1");
+    clicked("1.2.1");
+    clicked("4.1.1");
+    clicked("1.2.3");
+    clicked("6.1.2");
+    clicked("2.3.1");
+    clicked("7.1.2");
+    clicked("2.2.2");
+    clicked("5.1.2");
+    clicked("2.1.3");
+    clicked("3.2.3");
+    clicked("6.3.2");
+    clicked("8.1.3");
+    clicked("3.1.2");
+    clicked("7.1.3");
+    clicked("3.2.2");
+    clicked("5.1.3");
+    clicked("3.3.2");
 }
