@@ -30,15 +30,16 @@ function clicked(strId) {  //  get game ( remove first two charageters)
     var game = strId.substring(0, 1) - 1; //get the inner game #  ( arrays starts at 0)
     var strBox = strId.slice(2);
     var box = parseFloat(strBox); //  remove the period
-    //
-    console.log("clicked(\"" + strId + "\");");
-    if (boxesTaken > 79) {
+
+    //console.log("clicked(\"" + strId + "\");");
+    if (boxesTaken > 79) {  // game over
         if (!Won)
             alert("CATS game Please start another game");
         else
             alert("Please start another game");
         return;
     }
+    //  user didin't click in available subgame
     if (currentGameNumber != -1 && game != currentGameNumber) {
         alert("Please make your selection in the correct sub-game");
         return;
@@ -50,8 +51,7 @@ function clicked(strId) {  //  get game ( remove first two charageters)
     else
         player = 1; // player 2
 
-    //console.log("BEGINNING - Player: " + player + " id: " + strId + " game: " + game + " box: " + box + " currentGameNumber: " + currentGameNumber);
-
+    //  if you are not clicking in an open square. exit function
     if (playerScore[0][game].indexOf(box) >= 0 || playerScore[1][game].indexOf(box) >= 0)
         return;
 
@@ -71,7 +71,6 @@ function clicked(strId) {  //  get game ( remove first two charageters)
                 boxTemp = game + 1 + "." + x + "." + y;
                 if ((document.getElementById(boxTemp).style.backgroundColor != "green") &&
                     (document.getElementById(boxTemp).style.backgroundColor != "red")) {
-                    //console.log("***********************************")
                     boxesTaken++;
                 }
                 document.getElementById(boxTemp).style.backgroundColor = color;
@@ -80,20 +79,17 @@ function clicked(strId) {  //  get game ( remove first two charageters)
             alert(color + ' wins click play again');
             boxesTaken = 82;
             Won = true;
-        }
-    }
+        } //  if outer game won
+    }  //  if sub-winner
     // if the box clicked in the inner game is in the outter game,  the next player can move anywhere
-
-    //  Need to check if the  box is inthe cats array
     if (playerScore[0][OuterGame].indexOf(box) >= 0 || playerScore[1][OuterGame].indexOf(box) >= 0 || catsGame.indexOf(box) >= 0)
         currentGameNumber = -1;
     else
         currentGameNumber = gameLocation.indexOf(box);
 
-
+    //  set next turn color
     color = (player != 0) ? "red" : "green";
     document.getElementById("turnbox").style.backgroundColor = color;
-    //  console.log("END - Player: " + player + " id: " + strId + " game: " + game + " box: " + box + " currentGameNumber: " + currentGameNumber);
 
     if (!Won) {
         if (!subGameWinner) {
@@ -102,7 +98,7 @@ function clicked(strId) {  //  get game ( remove first two charageters)
             if (p1g + p2g == 9) {
                 catsGame.push(gameLocation[game]);
             }
-        }
+        }  //  end if not sub game winner
         //  clear available moves
         for (g = 1; g <= 9; g++)  // game
             for (x = 1; x <= 3; x++)
@@ -112,20 +108,18 @@ function clicked(strId) {  //  get game ( remove first two charageters)
                     if ((document.getElementById(myIndex).style.backgroundColor == "lightgreen") ||
                         (document.getElementById(myIndex).style.backgroundColor == "lightpink"))
                         document.getElementById(myIndex).style.backgroundColor = ""
-                }
+                }  //  end for y
 
         //  show available moves
-        if (currentGameNumber == -1) {  //  if the next move is in an inner game that is already full, the player van move anywhere
-            //console.log("current game number = -1");
+        //  if the next move is in an inner game that is already full, the player van move anywhere
+        if (currentGameNumber == -1) {
             for (g = 1; g <= 9; g++)  // game
                 for (x = 1; x <= 3; x++)
                     for (y = 1; y <= 3; y++) {
                         myIndex = g + "." + x + "." + y;
-                        //console.log(myIndex + " background color : " + document.getElementById(myIndex).style.backgroundColor);
                         if (document.getElementById(myIndex).style.backgroundColor == "")
                             document.getElementById(myIndex).style.backgroundColor = availableColor;
-                        //document.getElementById(myIndex).style.backgroundColor = "lightgray" ;
-                    }
+                    }  //  end for y
         }
         else {  //  just highlight the inner game there the playerc can move
             for (x = 1; x <= 3; x++)
@@ -134,17 +128,16 @@ function clicked(strId) {  //  get game ( remove first two charageters)
                     if (document.getElementById(myIndex).style.backgroundColor == "")
                         document.getElementById(myIndex).style.backgroundColor = availableColor;
                 }
-        }
+        }  //  end else
     } //  end if NOT Won
-    //console.log("Click Count - " +clickCount);
-}
+}  //  end clicked function
 
 function Reset() {
     location.reload();
 }
 
 function Undo() {
-    //  remove th players move and make that square white again
+    //  remove the players move and make that square white again
     //  remove the shading and put it back to where it was
     //  change the color of the "turn" indicator
     clickCount--;  //  remove one from teh Clickcount
@@ -208,7 +201,7 @@ function pageLoad() {
     //rowWin();
     //catsGameTest();
     //colWin()
-    diagWin();
+    //diagWin();
 }
 function diagWin() {
     clicked("1.1.1");
