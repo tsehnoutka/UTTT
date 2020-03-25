@@ -8,6 +8,8 @@
 //  Why does winning message box pop up then the screen gets colored in?
 //  Make network game so two cam play over network
 //  use an XOR to toggle petween players instead of CountClick
+//  change Alerts to Modals
+//        https://www.w3schools.com/howto/howto_css_modals.asp
 
 var playerScore = new Array();  //  player, game, array of squares
 for (p = 0; p < 2; p++) {
@@ -34,7 +36,7 @@ function clicked(strId) {  //  get game ( remove first two charageters)
     //console.log("clicked(\"" + strId + "\");");
     if (boxesTaken > 79) {  // game over
         if (!Won)
-            alert("CATS game Please start another game");
+            alert("CATS game \n\nPlease start another game");
         else
             alert("Please start another game");
         return;
