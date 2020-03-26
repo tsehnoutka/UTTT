@@ -43,12 +43,16 @@ var catsGame = new Array();
 var currentGameNumber = -1;
 var gameLocation = [1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 3.1, 3.2, 3.3];
 var player = 0; // 0 for player 1, 1 for pkayer 2
-const PLAYER1 = 0;
-const PLAYER2 = 1;
 var boxesTaken = 0;
-const OUTERGAME = 9;
 var won = false;
 var previousIDs = new Array();
+const PLAYER1 = 0;
+const PLAYER2 = 1;
+const PLAYER1_COLOR = "red";
+const PLAYER1_SHADE = "lightpink";
+const PLAYER2_COLOR = "green";
+const PLAYER2_SHADE = "lightgreen";
+const OUTERGAME = 9;
 
 
 /*******************************************************************************
@@ -78,8 +82,8 @@ function clicked(strId) { //  get game ( remove first two charageters)
     return;
 
   //  the square is open
-  var color = (player == PLAYER1) ? "red" : "green";
-  var availableColor = (player == PLAYER1) ? "lightgreen" : "lightpink";
+  var color = (player == PLAYER1) ? PLAYER1_COLOR : PLAYER2_COLOR;
+  var availableColor = (player == PLAYER1) ? PLAYER2_SHADE : PLAYER1_SHADE;
   document.getElementById(strId).style.backgroundColor = color; // paint it red for player one
   playerScore[player][game].push(box); //  put this square's id in the array
   boxesTaken++;
@@ -87,11 +91,11 @@ function clicked(strId) { //  get game ( remove first two charageters)
   subGameWinner = checkWinnerPlayer(playerScore[player][game]);
   if (subGameWinner) { //  set that whole section to the color of the current player
     playerScore[player][OUTERGAME].push(gameLocation[game]);
-    for (x = 1; x <= 3; x++)
-      for (y = 1; y <= 3; y++) {
-        boxTemp = game + 1 + "." + x + "." + y;
-        if ((document.getElementById(boxTemp).style.backgroundColor != "green") &&
-          (document.getElementById(boxTemp).style.backgroundColor != "red")) {
+    for (y = 1; y <= 3; y++)
+      for (x = 1; x <= 3; x++) {
+        boxTemp = game + 1 + "." + y + "." + x;
+        if ((document.getElementById(boxTemp).style.backgroundColor != PLAYER2_COLOR) &&
+          (document.getElementById(boxTemp).style.backgroundColor != PLAYER1_COLOR)) {
           boxesTaken++;
         }
         document.getElementById(boxTemp).style.backgroundColor = color;
@@ -109,7 +113,7 @@ function clicked(strId) { //  get game ( remove first two charageters)
     currentGameNumber = gameLocation.indexOf(box);
 
   //  set next turn color
-  color = (player != PLAYER1) ? "red" : "green";
+  color = (player != PLAYER1) ? PLAYER1_COLOR : PLAYER2_COLOR;
   document.getElementById("turnbox").style.backgroundColor = color;
 
   if (!won) {
@@ -122,12 +126,12 @@ function clicked(strId) { //  get game ( remove first two charageters)
     } //  end if not sub game winner
     //  clear available moves
     for (g = 1; g <= 9; g++) // game
-      for (x = 1; x <= 3; x++)
-        for (y = 1; y <= 3; y++) {
-          myIndex = g + "." + x + "." + y;
+      for (y = 1; y<= 3; y++)
+        for (x = 1; x <= 3; x++) {
+          myIndex = g + "." + y+ "." + x;
           //  console.log(myIndex + " : " + document.getElementById(myIndex).style.backgroundColor);
-          if ((document.getElementById(myIndex).style.backgroundColor == "lightgreen") ||
-            (document.getElementById(myIndex).style.backgroundColor == "lightpink"))
+          if ((document.getElementById(myIndex).style.backgroundColor == PLAYER2_SHADE) ||
+            (document.getElementById(myIndex).style.backgroundColor == PLAYER1_SHADE))
             document.getElementById(myIndex).style.backgroundColor = ""
         } //  end for y
 
@@ -149,9 +153,9 @@ function clicked(strId) { //  get game ( remove first two charageters)
  **    Shadeboxes
  *******************************************************************************/
 function shadeBoxes(GameNumber, shadeColor) {
-  for (x = 1; x <= 3; x++)
-    for (y = 1; y <= 3; y++) {
-      myIndex = GameNumber + 1 + "." + x + "." + y;
+  for (y = 1; y <= 3; y++)
+    for (x = 1; x <= 3; x++) {
+      myIndex = GameNumber + 1 + "." + y + "." + x;
       if (document.getElementById(myIndex).style.backgroundColor == "")
         document.getElementById(myIndex).style.backgroundColor = shadeColor;
     } //  end for y
@@ -172,8 +176,6 @@ function Undo() {
   var strP_Box = previousID.slice(2);
   var previousBox = parseFloat(strP_Box);
   var previousPlayer = (player ^ PLAYER1) ? PLAYER1 : PLAYER2;
-  console.log("previous ID = " + previousID);
-  console.log("previous Game = " + previousGame);
 
   //  need to figure out if the sub gane was just won
   player1WinBox = playerScore[PLAYER1][OUTERGAME].indexOf(gameLocation[previousGame]);
@@ -187,33 +189,33 @@ function Undo() {
 
   //  clear the board
   for (g = 0; g < 9; g++) // game
-    for (x = 1; x <= 3; x++)
-      for (y = 1; y <= 3; y++) {
-        myIndex = g + 1 + "." + x + "." + y;
-        if ((document.getElementById(myIndex).style.backgroundColor == "lightgreen") ||
-          (document.getElementById(myIndex).style.backgroundColor == "lightpink"))
+    for (y= 1; y <= 3; y++)
+      for (x = 1; x <= 3; x++) {
+        myIndex = g + 1 + "." + y + "." + x;
+        if ((document.getElementById(myIndex).style.backgroundColor == PLAYER2_SHADE) ||
+          (document.getElementById(myIndex).style.backgroundColor == PLAYER1_SHADE))
           document.getElementById(myIndex).style.backgroundColor = ""
       } //  end for y
   //  remove the move from the array
   playerScore[previousPlayer][previousGame].splice(playerScore[player][previousGame].indexOf(previousBox), 1);
 
   //  put board back the way it was
-  for (x = 1; x <= 3; x++)
-    for (y = 1; y <= 3; y++) {
-      myIndex = previousGame + 1 + "." + x + "." + y;
-      thisBox = parseFloat(x + "." + y);;
+  for (y = 1; y <= 3; y++)
+    for (x= 1; x <= 3; x++) {
+      myIndex = previousGame + 1 + "." + y + "." + x;
+      thisBox = parseFloat(y + "." + x);;
       document.getElementById(myIndex).style.backgroundColor = "";
       inPlayer1Array = playerScore[PLAYER1][previousGame].indexOf(thisBox);
       inPlayer2Array = playerScore[PLAYER2][previousGame].indexOf(thisBox);
       if (inPlayer1Array != -1)
-        document.getElementById(myIndex).style.backgroundColor = "red"
+        document.getElementById(myIndex).style.backgroundColor = PLAYER1_COLOR
       if (inPlayer2Array != -1)
-        document.getElementById(myIndex).style.backgroundColor = "green"
+        document.getElementById(myIndex).style.backgroundColor = PLAYER2_COLOR
     }
 
-  var lastshade = (player != PLAYER1) ? "lightpink" : "lightgreen";
+  var lastshade = (player != PLAYER1) ? PLAYER1_SHADE : PLAYER2_SHADE;
   player = (player ^ PLAYER1) ? PLAYER1 : PLAYER2;
-  var lastcolor = (player == PLAYER1) ? "red" : "green";
+  var lastcolor = (player == PLAYER1) ? PLAYER1_COLOR : PLAYER2_COLOR;
 
   //  shade the game for posible moves
   if (1 != boxesTaken) {
@@ -313,10 +315,10 @@ window.onclick = function windowClicked(event) {
 
 function pageLoad() {
   //  var test = require('./test.js')
-  //rowWin();   //  green wins across the top
+  //rowWin();   //  Player2  wins across the top
   //catsGameTest();  //LIS
-  //colWin()   //  green wins first column
-  //diagWin();   //  green wins top left ot bottom right
+  //colWin()   //  Player2 wins first column
+  //diagWin();   //  Player2 wins top left ot bottom right
 }
 
 function diagWin() {
