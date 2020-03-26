@@ -177,12 +177,12 @@ function Undo() {
 
   //  need to figure out if the sub gane was just won
   player1WinBox = playerScore[PLAYER1][OUTERGAME].indexOf(gameLocation[previousGame]);
-  if (player1WinBox!=-1 ) {   //  if so, remove winning game from OUTERGAME
+  if (player1WinBox != -1) { //  if so, remove winning game from OUTERGAME
     playerScore[PLAYER1][OUTERGAME].splice(playerScore[player][previousGame].indexOf(previousBox), 1);
   }
   player2WinBox = playerScore[PLAYER2][OUTERGAME].indexOf(gameLocation[previousGame]);
-  if (player2WinBox !=-1) {    //  if so, remove winning game from OUTERGAME
-    playerScore[PLAYER2][OUTERGAME].splice( playerScore[PLAYER2][OUTERGAME].indexOf(gameLocation[previousGame]), 1);
+  if (player2WinBox != -1) { //  if so, remove winning game from OUTERGAME
+    playerScore[PLAYER2][OUTERGAME].splice(playerScore[PLAYER2][OUTERGAME].indexOf(gameLocation[previousGame]), 1);
   }
 
   //  clear the board
